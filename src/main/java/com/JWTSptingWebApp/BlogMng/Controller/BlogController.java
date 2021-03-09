@@ -53,21 +53,29 @@ import com.JWTSptingWebApp.springbootsecurity.controller.AuthenticationControlle
 public class BlogController {
 
 	static Logger log = LoggerFactory.getLogger(BlogController.class);
+
 	@Autowired
 	public LoggingService loggingService;
+
 	@Autowired
 	private BlogServiceImpl blogServiceImpl;
+
 	@Autowired
 	private BlogRepository blogRepository;
+
 	@Autowired
 	UserDetailRepository userDetailRepository;
+
 	@Autowired
 	CoverImageRepository coverImageRepository;
+
 	@Autowired
 	DBFileRepository dBFileRepository;
+
 	DBFile dbFile;
+
 	BlogCoverImage blogCoverImage;
-	
+
 	@Autowired
 	private BlogService blogService;
 
@@ -92,7 +100,8 @@ public class BlogController {
 			map.put("message", "Title Required.");
 			map.put("status", false);
 			map.put("title", blogDto.getTitle());
-			loggingService.createLog("NullPointerException", new Timestamp(System.currentTimeMillis()), false, 404, "Title must not be null");
+			loggingService.createLog("NullPointerException", new Timestamp(System.currentTimeMillis()), false, 404,
+					"Title must not be null");
 
 			log.info("log INFO {}", "Title must not be null");
 			return ResponseEntity.status(HttpStatus.NON_AUTHORITATIVE_INFORMATION).body(map);
@@ -103,7 +112,8 @@ public class BlogController {
 			map.put("status", false);
 			map.put("content", blogDto.getContent());
 
-			loggingService.createLog("NullPointerException", new Timestamp(System.currentTimeMillis()), false, 404, "Content must not be null");
+			loggingService.createLog("NullPointerException", new Timestamp(System.currentTimeMillis()), false, 404,
+					"Content must not be null");
 
 			log.info("log INFO {}", "Content must not be null");
 			return ResponseEntity.status(HttpStatus.NON_AUTHORITATIVE_INFORMATION).body(map);
@@ -114,7 +124,8 @@ public class BlogController {
 			map.put("status", false);
 			map.put("hashtag", blogDto.getHashTags());
 
-			loggingService.createLog("NullPointerException", new Timestamp(System.currentTimeMillis()), false, 404, "Hashtags must not be null");
+			loggingService.createLog("NullPointerException", new Timestamp(System.currentTimeMillis()), false, 404,
+					"Hashtags must not be null");
 
 			log.info("log INFO {}", "Hashtags must not be null");
 			return ResponseEntity.status(HttpStatus.NON_AUTHORITATIVE_INFORMATION).body(map);
@@ -126,19 +137,21 @@ public class BlogController {
 			map.put("status", false);
 			map.put("authorToken", blogDto.getAuthorToken());
 
-			loggingService.createLog("NullPointerException", new Timestamp(System.currentTimeMillis()), false, 404, "AuthorToken must not be null");
+			loggingService.createLog("NullPointerException", new Timestamp(System.currentTimeMillis()), false, 404,
+					"AuthorToken must not be null");
 
 			log.info("log INFO {}", "AuthorToken must not be null");
 			return ResponseEntity.status(HttpStatus.NON_AUTHORITATIVE_INFORMATION).body(map);
 		}
-		UserDetail user = userDetailRepository.findByTokenuserAndActive(blogDto.getAuthorToken(),true);
+		UserDetail user = userDetailRepository.findByTokenuserAndActive(blogDto.getAuthorToken(), true);
 		if (null == user) {
 			map.put("code", 404);
 			map.put("message", "Author not found");
 			map.put("status", false);
 			map.put("Author", blogDto.getAuthorToken());
 
-			loggingService.createLog("NoSuchElementException", new Timestamp(System.currentTimeMillis()), false, 404, "Author not found");
+			loggingService.createLog("NoSuchElementException", new Timestamp(System.currentTimeMillis()), false, 404,
+					"Author not found");
 
 			log.info("log INFO {}", "Author not found");
 			return ResponseEntity.status(HttpStatus.NON_AUTHORITATIVE_INFORMATION).body(map);
@@ -149,12 +162,13 @@ public class BlogController {
 			map.put("Image Token", blogDto.getCoverImageToken());
 			map.put("status", false);
 
-			loggingService.createLog("NullPointerException", new Timestamp(System.currentTimeMillis()), false, 404, "CoverImage must not be null");
+			loggingService.createLog("NullPointerException", new Timestamp(System.currentTimeMillis()), false, 404,
+					"CoverImage must not be null");
 
 			log.info("log INFO {}", "CoverImage must not be null");
 			return ResponseEntity.status(HttpStatus.NON_AUTHORITATIVE_INFORMATION).body(map);
 		}
-		
+
 		blogCoverImage = coverImageRepository.findByImagetoken(blogDto.getCoverImageToken());
 		if (null == blogCoverImage) {
 			map.put("code", 404);
@@ -162,27 +176,27 @@ public class BlogController {
 			map.put("status", false);
 			map.put("title", blogDto.getCoverImageToken());
 
-			loggingService.createLog("NoSuchElementException", new Timestamp(System.currentTimeMillis()), false, 404, "CoverImage not found");
+			loggingService.createLog("NoSuchElementException", new Timestamp(System.currentTimeMillis()), false, 404,
+					"CoverImage not found");
 
 			log.info("log INFO {}", "CoverImage not found");
 			return ResponseEntity.status(HttpStatus.NON_AUTHORITATIVE_INFORMATION).body(map);
-			
+
 		} else {
-			//BlogCoverImage bi=coverImageRepository.existsByImagetoken(blogDto.getCoverImageToken());
-			if(blogCoverImage.getBlogtoken()!=null)
-			{
+			// BlogCoverImage
+			// bi=coverImageRepository.existsByImagetoken(blogDto.getCoverImageToken());
+			if (blogCoverImage.getBlogtoken() != null) {
 				map.put("code", 404);
 				map.put("message", "CoverImage is already used by other Blog");
 				map.put("status", false);
 				map.put("title", blogDto.getCoverImageToken());
 
-				loggingService.createLog("_", new Timestamp(System.currentTimeMillis()), false, 404, "CoverImage must not be duplicate");
+				loggingService.createLog("_", new Timestamp(System.currentTimeMillis()), false, 404,
+						"CoverImage must not be duplicate");
 
 				log.info("log INFO {}", "CoverImage must not be duplicate");
 				return ResponseEntity.status(HttpStatus.NON_AUTHORITATIVE_INFORMATION).body(map);
-			}
-			else
-			{
+			} else {
 				blogCoverImage.setBlogtoken(token);
 			}
 		}
@@ -197,7 +211,8 @@ public class BlogController {
 					map.put("status", false);
 					map.put("title", blogDto.getFilesToken()[i]);
 
-					loggingService.createLog("NoSuchElementException", new Timestamp(System.currentTimeMillis()), false, 404, "File not found");
+					loggingService.createLog("NoSuchElementException", new Timestamp(System.currentTimeMillis()), false,
+							404, "File not found");
 
 					log.info("log INFO {}", "File not found");
 					return ResponseEntity.status(HttpStatus.NON_AUTHORITATIVE_INFORMATION).body(map);
@@ -216,14 +231,14 @@ public class BlogController {
 		map1.put("authorToken", blogDto.getAuthorToken());
 		map1.put("authorName", user.getUsername());
 		map1.put("createdTime", blogDto.getCreatedTime());
-		map1.put("coverImage",blogCoverImage.getDownloadUrl());
+		map1.put("coverImage", blogCoverImage.getDownloadUrl());
 		map.put("data", map1);
 		map.put("code", 200);
-		
-	
+
 		map.put("message", "Blog created Successfully");
 		map.put("status", true);
-		loggingService.createLog("_", new Timestamp(System.currentTimeMillis()), true, 200, "Blog created successfully");
+		loggingService.createLog("_", new Timestamp(System.currentTimeMillis()), true, 200,
+				"Blog created successfully");
 		log.info("log INFO {}", "Blog created successfully");
 		return ResponseEntity.ok(map);
 	}
@@ -231,14 +246,15 @@ public class BlogController {
 	@PutMapping("/updateBlog")
 	public ResponseEntity<?> updateBlog(@RequestBody BlogDto blogDto) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		Map<String, Object> maps = new LinkedHashMap<String,Object>();
+		Map<String, Object> maps = new LinkedHashMap<String, Object>();
 		if (blogDto.getToken().isEmpty()) {
 			map.put("code", 404);
 			map.put("message", "Token Required.");
 			map.put("status", false);
 			map.put("Token", blogDto.getToken());
 
-			loggingService.createLog("NullPointerException", new Timestamp(System.currentTimeMillis()), false, 404, "BlogToken must not be null");
+			loggingService.createLog("NullPointerException", new Timestamp(System.currentTimeMillis()), false, 404,
+					"BlogToken must not be null");
 
 			log.info("log INFO {}", "BlogToken must not be null");
 			return ResponseEntity.status(HttpStatus.NON_AUTHORITATIVE_INFORMATION).body(map);
@@ -249,7 +265,8 @@ public class BlogController {
 			map.put("status", false);
 			map.put("authorToken", blogDto.getAuthorToken());
 
-			loggingService.createLog("NullPointerException", new Timestamp(System.currentTimeMillis()), false, 404, "AuthorToken must not be null");
+			loggingService.createLog("NullPointerException", new Timestamp(System.currentTimeMillis()), false, 404,
+					"AuthorToken must not be null");
 
 			log.info("log INFO {}", "AuthorToken must not be null");
 			return ResponseEntity.status(HttpStatus.NON_AUTHORITATIVE_INFORMATION).body(map);
@@ -260,14 +277,15 @@ public class BlogController {
 			map.put("message", "Blog not Found");
 			map.put("status", false);
 
-			loggingService.createLog("NoSuchElementException", new Timestamp(System.currentTimeMillis()), false, 404, "Blog not found");
+			loggingService.createLog("NoSuchElementException", new Timestamp(System.currentTimeMillis()), false, 404,
+					"Blog not found");
 
 			log.info("log INFO {}", "Blog not found");
 			return ResponseEntity.status(HttpStatus.NON_AUTHORITATIVE_INFORMATION).body(map);
 		}
 
 		else {
-			
+
 			Blog blog = blogRepository.findByToken(blogDto.getToken());
 			String authorToken1 = blog.getAuthorToken();
 
@@ -286,10 +304,10 @@ public class BlogController {
 				}
 
 				if ((blogDto.getCoverImageToken()).isEmpty()) {
-					blogCoverImage=coverImageRepository.findByBlogtoken(blogDto.getToken());
+					blogCoverImage = coverImageRepository.findByBlogtoken(blogDto.getToken());
 					blogDto.setCoverImageToken(blogCoverImage.getImagetoken());
 				}
-			
+
 				else {
 					blogCoverImage = coverImageRepository.findByImagetoken(blogDto.getCoverImageToken());
 					if (null == blogCoverImage) {
@@ -298,15 +316,17 @@ public class BlogController {
 						map.put("status", false);
 						map.put("ImageToken", blogDto.getCoverImageToken());
 
-						loggingService.createLog("NoSuchElementException", new Timestamp(System.currentTimeMillis()), false, 404, "CoverImage not found");
+						loggingService.createLog("NoSuchElementException", new Timestamp(System.currentTimeMillis()),
+								false, 404, "CoverImage not found");
 
 						log.info("log INFO {}", "CoverImage not found");
 						return ResponseEntity.status(HttpStatus.NON_AUTHORITATIVE_INFORMATION).body(map);
 					} else {
-						if (blogCoverImage.getBlogtoken() == null||blogCoverImage.getBlogtoken().equals(blogDto.getToken()))// ||(blogCoverImage.getBlogtoken().equals(blogDto.getToken())))
+						if (blogCoverImage.getBlogtoken() == null
+								|| blogCoverImage.getBlogtoken().equals(blogDto.getToken()))// ||(blogCoverImage.getBlogtoken().equals(blogDto.getToken())))
 						{
 							BlogCoverImage bi = coverImageRepository.findByBlogtoken(blogDto.getToken());
-							if (bi==null) {
+							if (bi == null) {
 								blogCoverImage.setBlogtoken(blogDto.getToken());
 							} else {
 								coverImageRepository.deleteByBlogtoken(bi.getBlogtoken());
@@ -319,7 +339,8 @@ public class BlogController {
 							map.put("status", false);
 							map.put("title", blogDto.getCoverImageToken());
 
-							loggingService.createLog("_", new Timestamp(System.currentTimeMillis()), false, 404, "CoverImage must not be duplicate");
+							loggingService.createLog("_", new Timestamp(System.currentTimeMillis()), false, 404,
+									"CoverImage must not be duplicate");
 
 							log.info("log INFO {}", "CoverImage must not be duplicate");
 							return ResponseEntity.status(HttpStatus.NON_AUTHORITATIVE_INFORMATION).body(map);
@@ -328,8 +349,7 @@ public class BlogController {
 				}
 				if (blogDto.getFilesToken().length == 0) {
 
-				}
-			else {
+				} else {
 					for (int i = 0; i < blogDto.getFilesToken().length; i++) {
 						dbFile = dBFileRepository.findByToken(blogDto.getFilesToken()[i]);
 						if (null == dbFile) {
@@ -338,7 +358,8 @@ public class BlogController {
 							map.put("status", false);
 							map.put("title", blogDto.getFilesToken()[i]);
 
-							loggingService.createLog("NoSuchElementException", new Timestamp(System.currentTimeMillis()), false, 404, "File not found");
+							loggingService.createLog("NoSuchElementException",
+									new Timestamp(System.currentTimeMillis()), false, 404, "File not found");
 
 							log.info("log INFO {}", "File not found");
 							return ResponseEntity.status(HttpStatus.NON_AUTHORITATIVE_INFORMATION).body(map);
@@ -351,21 +372,22 @@ public class BlogController {
 				blogDto.setAuthorToken(blog.getAuthorToken());
 				blogServiceImpl.updateBlog(blogDto);
 				map.put("data", blogDto);
-				maps.put("data",map);
+				maps.put("data", map);
 				map.put("message", "Blog Updated Successfully");
 				map.put("status", true);
 				map.put("code", 200);
-				loggingService.createLog("_", new Timestamp(System.currentTimeMillis()), true, 200, "Blog Updated Successfully");
+				loggingService.createLog("_", new Timestamp(System.currentTimeMillis()), true, 200,
+						"Blog Updated Successfully");
 				log.info("log INFO {}", "Blog Updated Successfully");
 				ResponseEntity.ok(maps);
-			}
-			else {
+			} else {
 				map.put("code", 404);
 				map.put("authorToken", blogDto.getAuthorToken());
 				map.put("message", "Author not Found");
 				map.put("status", false);
 
-				loggingService.createLog("NoSuchElementException", new Timestamp(System.currentTimeMillis()), false, 404, "Author not found");
+				loggingService.createLog("NoSuchElementException", new Timestamp(System.currentTimeMillis()), false,
+						404, "Author not found");
 
 				log.info("log INFO {}", "Author not found");
 				return ResponseEntity.status(HttpStatus.NON_AUTHORITATIVE_INFORMATION).body(map);
